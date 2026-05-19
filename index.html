@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>단추 (Danchoo) - 데모</title>
+    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 1. 숏폼 홈 모드 -->
+        <main id="view-home" class="view-container active">
+            <header class="top-header">
+                <h1 class="logo">단추</h1>
+                <div class="mode-toggle">
+                    <span class="mode-btn active" onclick="switchMode('jp')">일본어 학습</span> | 
+                    <span class="mode-btn" onclick="switchMode('kr')">한국어 커뮤니티</span>
+                </div>
+            </header>
+            <div id="feed-container" class="feed-container"></div>
+        </main>
+
+        <!-- 2. 단어장 모드 -->
+        <main id="view-wordbook" class="view-container">
+            <!-- 단어장: 메인 대시보드 -->
+            <div id="wordbook-dashboard" style="display:flex; flex-direction:column; height:100%;">
+                <header class="page-header">
+                    <h2>나의 단어장 📚</h2>
+                </header>
+                <!-- 상단 작고 심플한 통계 -->
+                <div style="padding: 10px 20px 0 20px;">
+                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="stat-card" style="box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; padding: 15px;">
+                            <i class="fa-solid fa-book-bookmark" style="color:#3498db; font-size:19px;"></i>
+                            <span class="stat-num" id="stat-total-dash" style="font-size:21px; font-weight:800; margin-top:5px; color:#111;">0</span>
+                            <span class="stat-label" style="font-size:13px; color:#777;">보관한 단어</span>
+                        </div>
+                        <div class="stat-card" style="box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #ffeada; background: #fffaf5; padding: 15px;">
+                            <i class="fa-solid fa-triangle-exclamation" style="color:#ff3b30; font-size:19px;"></i>
+                            <span class="stat-num" id="stat-urgent-dash" style="font-size:21px; font-weight:800; margin-top:5px; color:#ff3b30;">0</span>
+                            <span class="stat-label" style="font-size:13px; color:#777;">망각 임박 (오늘)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding: 30px 20px; display: flex; flex-direction: column; justify-content: center; flex: 1;">
+                    <!-- 거대하고 강조된 핵심 동작 버튼 -->
+                    <button onclick="startSRS()" style="background: linear-gradient(135deg, #ff8c00 0%, #ff512f 100%); color: white; border: none; border-radius: 20px; padding: 35px 20px; font-size: 21px; font-weight: 800; display:flex; flex-direction:column; align-items:center; gap:10px; cursor: pointer; box-shadow: 0 8px 25px rgba(255,140,0,0.35); transition: 0.2s; margin-bottom: 20px;">
+                        <i class="fa-solid fa-brain" style="font-size: 42px; margin-bottom: 5px;"></i>
+                        <span>오늘의 복습 시작하기</span>
+                        <span style="font-size:14px; font-weight:500; color:rgba(255,255,255,0.85); display:block; margin-top:2px;">단추만의 SRS 추천 알고리즘</span>
+                    </button>
+                    
+                    <!-- 작고 서브 동작에 해당하는 버튼 -->
+                    <button onclick="toggleWordbookView('list')" style="background:transparent; color:#ff8c00; border: 1px solid #ff8c00; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 700; cursor: pointer;">👀 보관된 모든 단어 보기</button>
+                </div>
+            </div>
+
+            <!-- 단어장: SRS 상세 릴스 -->
+            <div id="wordbook-srs-view" style="display:none; height: 100%; flex-direction: column; position:relative; background:#fdfbfb;">
+                <header class="page-header" style="position: absolute; top: 0; left: 0; z-index: 50; width: 100%; padding: 20px; display:flex; align-items:center;">
+                    <button onclick="toggleWordbookView('dash'); stopSRS();" style="background:rgba(255,255,255,0.7); border-radius:50%; width:40px; height:40px; border:none; font-size:21px; color:#333; cursor:pointer; backdrop-filter:blur(5px);"><i class="fa-solid fa-xmark"></i></button>
+                    <div style="flex:1;"></div>
+                </header>
+                <div id="srs-feed-container" class="feed-container"></div>
+            </div>
+
+            <!-- 단어장: 상세 목록 -->
+            <div id="wordbook-list-view" style="display:none; height: 100%; flex-direction: column; position:relative;">
+                <header class="page-header" style="display:flex; align-items:center; border-bottom: 1px solid #eee; padding-bottom:15px; margin-bottom:0;">
+                    <button onclick="toggleWordbookView('dash')" style="background:none; border:none; font-size:21px; color:#333; margin-right:15px; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 style="flex:1; margin:0; font-size:21px;">보관된 단어 상세 목록</h2>
+                </header>
+                <div class="list-stats-mini" style="padding: 15px 20px 0 20px; display:flex; gap:10px;">
+                    <div style="flex:1; background:#fff; padding:10px; border-radius:8px; border:1px solid #eee; font-size:13px; font-weight:700; color:#555; text-align:center;">총 <span id="stat-total" style="color:#111; font-size:15px;">0</span>개</div>
+                    <div style="flex:1; background:#fff0f0; padding:10px; border-radius:8px; border:1px solid #ffd0d0; font-size:13px; font-weight:700; color:#ff3b30; text-align:center;">망각 임박 <span id="stat-urgent" style="font-size:15px;">0</span>개</div>
+                </div>
+                <div id="wordbook-list" class="scroll-list" style="padding-top:15px;"></div>
+            </div>
+        </main>
+
+        <!-- 3. 커뮤니티 모드 -->
+        <main id="view-community" class="view-container">
+            <header class="page-header community-header">
+                <h2>단추 커뮤니티</h2>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="단어 검색하기">
+                    <button class="req-btn" onclick="showToast('단어가 검색되었습니다!')">검색</button>
+                </div>
+                <div class="filter-tabs com-tabs" id="com-tabs-container">
+                    <!-- JS Rendering -->
+                </div>
+            </header>
+            <div id="community-list" class="scroll-list"></div>
+
+            <!-- Floating Mode Switch -->
+            <div class="floating-com-toggle" onclick="toggleComRole('toggle')" style="position: absolute; bottom: 70px; right: 15px; z-index: 50; width: 60px; height: 60px; background: white; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; flex-direction:column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: 2px solid #eee;">
+                <span id="floating-thumb" style="font-size: 29px;">🇯🇵</span>
+            </div>
+        </main>
+
+        <!-- 4. 커뮤니티 - 단어 상세 모달 -->
+        <div id="detail-modal" class="modal-overlay full-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>단어 상세 정보</h3>
+                    <button class="close-btn" onclick="closeDetailModal()"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <div class="modal-body detail-body" id="detail-modal-body">
+                    <!-- 렌더링 영역 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 마이페이지 모드 -->
+        <main id="view-mypage" class="view-container">
+            <header class="page-header" style="padding-bottom: 5px;">
+                <h2>내 설정 (마이페이지)</h2>
+            </header>
+            
+            <div class="scroll-list" style="padding: 0 15px;">
+                <!-- 프로필 섹션 -->
+                <div class="profile-header">
+                    <div class="profile-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                    <div class="profile-info">
+                        <h3>단추 마스터</h3>
+                        <span class="profile-badge">🇰🇷 한국어 Native &nbsp;|&nbsp; 🇯🇵 일어 학습자</span>
+                    </div>
+                </div>
+
+                <!-- 통계 그리드 -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fa-solid fa-fire" style="color:#ff3b30;"></i>
+                        <span class="stat-num">14일</span>
+                        <span class="stat-label">연속 학습</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-coins" style="color:#ffcc00;"></i>
+                        <span class="stat-num" id="stat-mypage-maedeup">350</span>
+                        <span class="stat-label">누적 매듭</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-book-bookmark" style="color:#3498db;"></i>
+                        <span class="stat-num" id="stat-mypage-words">0</span>
+                        <span class="stat-label">저장한 단어</span>
+                    </div>
+                </div>
+
+                <!-- 메뉴 리스트 -->
+                <div class="menu-list">
+                    <div class="menu-item" onclick="showToast('질문 내역이 비어있습니다.')">
+                        <div class="menu-left"><i class="fa-solid fa-comment-dots" style="color:#ff8c00;"></i> <span>내 질문 및 답변 내역</span></div>
+                        <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                    </div>
+                    <div class="menu-item" onclick="showToast('아직 상점이 오픈되지 않았습니다. 매듭을 모아주세요!')">
+                        <div class="menu-left"><i class="fa-solid fa-shop" style="color:#ff8c00;"></i> <span>매듭 상점 (기프티콘 교환)</span></div>
+                        <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                    </div>
+                    <div class="menu-item" onclick="const t = this.querySelector('.mock-toggle'); t.classList.toggle('active'); showToast(t.classList.contains('active') ? '푸시 알림이 켜졌습니다.' : '푸시 알림이 꺼졌습니다.');">
+                        <div class="menu-left"><i class="fa-regular fa-bell" style="color:#555;"></i> <span>새로운 답변 알림 받기</span></div>
+                        <div class="mock-toggle active"></div>
+                    </div>
+                    <div class="menu-item" onclick="showToast('이용 가이드 페이지 준비 중!')">
+                        <div class="menu-left"><i class="fa-solid fa-book-open-reader" style="color:#555;"></i> <span>단추(Danchoo) 가이드북</span></div>
+                        <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                    </div>
+                    <div class="menu-item" onclick="showToast('설정 페이지 준비 중!')">
+                        <div class="menu-left"><i class="fa-solid fa-gear" style="color:#555;"></i> <span>앱 일반 설정</span></div>
+                        <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 하단 네비게이션 -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="navTo('home', this)"><i class="fa-solid fa-house"></i><span>홈</span></button>
+            <button class="nav-item" onclick="navTo('wordbook', this)"><i class="fa-solid fa-book"></i><span>단어장</span></button>
+            <button class="nav-item" onclick="navTo('community', this)"><i class="fa-solid fa-users"></i><span>커뮤니티</span></button>
+            <button class="nav-item" onclick="navTo('mypage', this)"><i class="fa-solid fa-user"></i><span>마이페이지</span></button>
+        </nav>
+
+        <!-- 토스트, 모달들 -->
+        <div id="toast" class="toast">메시지</div>
+
+        <!-- 일반 댓글/질문 창 (숏폼 전용) -->
+        <div id="comment-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>댓글 <span></span></h3>
+                    <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <div class="modal-body" id="modal-body-content"></div>
+                <div class="modal-input">
+                    <input type="text" id="comment-input" placeholder="댓글을 남겨보세요.">
+                    <button onclick="addComment()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 단어 평가 모달 -->
+        <div id="evaluate-modal" class="modal-overlay">
+            <div class="modal-content" style="height: auto;">
+                <div class="modal-header">
+                    <h3>단어 평가하기 ✍️</h3>
+                    <button class="close-btn" onclick="closeEvaluateModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body" style="gap:25px; padding-bottom: 20px; overflow:visible;">
+                    <div>
+                        <label style="font-weight:700; display:flex; justify-content:space-between; margin-bottom:15px; font-size: 16px;">
+                            <span>🔥 원어민 사용 빈도 (안 씀 ~ 매일)</span>
+                            <span id="eval-val-usage" style="color:#ff8c00;">50%</span>
+                        </label>
+                        <input type="range" id="eval-usage" min="0" max="100" value="50" oninput="updateEvalValue('usage', this.value)" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; display:flex; justify-content:space-between; margin-bottom:15px; font-size: 16px;">
+                            <span>👔 뉘앙스 (격식 ~ 매우 캐주얼)</span>
+                            <span id="eval-val-nuance" style="color:#3498db;">50%</span>
+                        </label>
+                        <input type="range" id="eval-nuance" min="0" max="100" value="50" oninput="updateEvalValue('nuance', this.value)" style="width:100%;">
+                    </div>
+                    <button class="btn-eval" onclick="submitEvaluation()" style="margin-top:10px;">평가 제출하고 매듭 10개 획득 💰</button>
+                </div>
+            </div>
+        </div>
+        <!-- 통계 데모그래픽 모달 -->
+        <div id="demographics-modal" class="modal-overlay">
+            <div class="modal-content" style="height: auto;">
+                <div class="modal-header">
+                    <h3>나이, 성별 별 상세 통계 📊</h3>
+                    <button class="close-btn" onclick="closeDemographicsModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body" id="demographics-body" style="padding-bottom: 20px;">
+                    <!-- JS rendering -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js?v=20"></script>
+</body>
+</html>
