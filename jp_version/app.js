@@ -2,47 +2,47 @@ const DataJP = [
     {
         id: 1, word: "ヤバい", reading: "야바이", meaning: "대박 / 헐 / 쩐다",
         example_foreign: "これ、本当にヤバいくない？", example_native: "(이거 완전 대박 아니야?)", tags: ["#日本語新語", "#擬音語"],
-        likes: 1204, comments: 45, usage: 95, nuance: 85, demographic: "10〜20代の男女ともに自由に使用"
+        likes: 1204, comments: 45, usage: 95, nuance: 15, demographic: "10〜20代の男女ともに自由に使用"
     },
     {
         id: 2, word: "エモい", reading: "에모이", meaning: "감성적이다 / 뭉클하다",
         example_foreign: "この曲、めっちゃエモいね。", example_native: "(이 노래 엄청 감성적이야.)", tags: ["#トレンド", "#ダンチュ単語"],
-        likes: 832, comments: 18, usage: 65, nuance: 90, demographic: "20代女性が特によく使う流行語"
+        likes: 832, comments: 18, usage: 65, nuance: 10, demographic: "20代女性が特によく使う流行語"
     },
     {
         id: 5, word: "推し", reading: "오시", meaning: "최애 (가장 좋아하는 아이돌/캐릭터 등)",
         example_foreign: "私の推しが尊すぎてしんどい…", example_native: "(내 최애가 너무 소중해서 힘들다…)", tags: ["#オタ活", "#沼落ち"],
-        likes: 3105, comments: 201, usage: 88, nuance: 60, demographic: "主にオタ活をする10〜30代の女性層"
+        likes: 3105, comments: 201, usage: 88, nuance: 40, demographic: "主にオタ活をする10〜30代の女性層"
     },
     {
         id: 6, word: "映える", reading: "바에루", meaning: "사진이 잘 받다 / 인스타 감성",
         example_foreign: "ここのカフェ、めっちゃインスタ映えする！", example_native: "(여기 카페 완전 인스타 감성 대박이야!)", tags: ["#ホットスポット", "#写真"],
-        likes: 1450, comments: 55, usage: 80, nuance: 75, demographic: "SNSを活発に利用する20代女性中心"
+        likes: 1450, comments: 55, usage: 80, nuance: 25, demographic: "SNSを活発に利用する20代女性中心"
     },
     {
         id: 7, word: "草", reading: "쿠사", meaning: "ㅋㅋㅋ (웃김을 표현)",
         example_foreign: "その話ガチで草生えるｗｗｗ", example_native: "(그 얘기 진짜 ㅋㅋㅋㅋ)", tags: ["#ネット用語", "#オタク"],
-        likes: 2100, comments: 110, usage: 75, nuance: 40, demographic: "10〜20代男性中心、インターネットコミュニティ"
+        likes: 2100, comments: 110, usage: 75, nuance: 60, demographic: "10〜20代男性中心、インターネットコミュニティ"
     },
     {
         id: 8, word: "ガチで", reading: "가치데", meaning: "진심으로 / 진짜로",
         example_foreign: "ガチで美味しいから食べてみて。", example_native: "(진짜 맛있으니까 한 번 먹어봐.)", tags: ["#強調", "#日常"],
-        likes: 1899, comments: 90, usage: 95, nuance: 80, demographic: "10代の学生層で日常的に使われる"
+        likes: 1899, comments: 90, usage: 95, nuance: 20, demographic: "10代の学生層で日常的に使われる"
     },
     {
         id: 9, word: "ワンチャン", reading: "완챤", meaning: "어쩌면 / 가능성 있음 (원 챈스)",
         example_foreign: "ワンチャン間に合うかもしれない。", example_native: "(어쩌면 제시간에 맞출 수 있을지도 몰라.)", tags: ["#大学生", "#ギャンブル"],
-        likes: 980, comments: 34, usage: 85, nuance: 70, demographic: "20代の大学生の会話で非常に頻繁"
+        likes: 980, comments: 34, usage: 85, nuance: 30, demographic: "20代の大学生の会話で非常に頻繁"
     },
     {
         id: 10, word: "ぴえん", reading: "피엔", meaning: "ㅠㅠ (슬픔/아쉬움을 귀엽게 표현)",
         example_foreign: "テストの点数悪かった…ぴえん🥺", example_native: "(시험 점수 낮게 나왔어… ㅠㅠ)", tags: ["#愛嬌", "#感情表現"],
-        likes: 2500, comments: 142, usage: 50, nuance: 95, demographic: "10代の女子高生を中心に使われたが最近はミーム化"
+        likes: 2500, comments: 142, usage: 50, nuance: 5, demographic: "10代の女子高生を中心に使われたが最近はミーム化"
     },
     {
         id: 11, word: "チルい", reading: "치루이", meaning: "여유롭다 / 느긋하다 (Chill하다)",
         example_foreign: "海見ながらチルい音楽聴いてる。", example_native: "(바다 보면서 분위기 있는 음악 듣고 있어.)", tags: ["#休憩", "#ヒップホップ"],
-        likes: 1102, comments: 45, usage: 60, nuance: 80, demographic: "20〜30代の社会人およびヒップスター層"
+        likes: 1102, comments: 45, usage: 60, nuance: 20, demographic: "20〜30代の社会人およびヒップスター層"
     },
     {
         id: 12, word: "ディスる", reading: "디스루", meaning: "무시하다 / 디스하다",
@@ -55,52 +55,52 @@ const DataKR = [
     {
         id: 3, word: "존맛탱", reading: "JMT", meaning: "めっちゃ美味しい (진짜 맛있다)",
         question: "「존맛탱」と「꿀맛」の違いは何ですか？", example_native: "이 떡볶이 진심 존맛탱이야.", example_translation: "(このトッポッキ、マジで超美味しいよ。)", tags: ["#質問待機", "#モッパン"],
-        likes: 2450, comments: 154, usage: 90, nuance: 80, demographic: "10〜20代を中心にインターネット等で幅広く使用"
+        likes: 2450, comments: 154, usage: 90, nuance: 20, demographic: "10〜20代を中心にインターネット等で幅広く使用"
     },
     {
         id: 4, word: "대박", reading: "テバク", meaning: "やばい / すごい",
         question: "目上の人に「대박!」って使っても大丈夫ですか？", example_native: "대박! 이거 진짜 예쁘다.", example_translation: "(ヤバい！これ本当に可愛い。)", tags: ["#敬語部屋", "#質問待機"],
-        likes: 1890, comments: 120, usage: 98, nuance: 75, demographic: "全年齢層の男女ともに日常会話で使用"
+        likes: 1890, comments: 120, usage: 98, nuance: 25, demographic: "全年齢層の男女ともに日常会話で使用"
     },
     {
         id: 13, word: "헐", reading: "ホル", meaning: "ええ！/ はぁ？ (놀람/기가 막힘)",
         question: "「헐」はどんなトーンで言えば自然ですか？", example_native: "헐, 벌써 시간이 이렇게 됐다고?", example_translation: "(はぁ？もうこんな時間なの？)", tags: ["#リアクション", "#感嘆詞"],
-        likes: 3100, comments: 210, usage: 95, nuance: 80, demographic: "全年齢層で日常的なリアクションとして使用"
+        likes: 3100, comments: 210, usage: 95, nuance: 20, demographic: "全年齢層で日常的なリアクションとして使用"
     },
     {
         id: 14, word: "꿀잼", reading: "クルジェム", meaning: "超おもしろい (꿀+재미)",
         question: "「꿀+〇〇」の他のバリエーションを知りたい！", example_native: "어제 본 영화 진짜 꿀잼이었어.", example_translation: "(昨日見た映画、超面白かったよ。)", tags: ["#新造語", "#語源質問"],
-        likes: 1540, comments: 85, usage: 85, nuance: 65, demographic: "10〜30代の若者層が非常によく使う"
+        likes: 1540, comments: 85, usage: 85, nuance: 35, demographic: "10〜30代の若者層が非常によく使う"
     },
     {
         id: 15, word: "킹받네", reading: "キンバンネ", meaning: "ガチでムカつく / マジで腹立つ",
         question: "ストリーマーがよく使う「킹받네」の語源は？", example_native: "아 또 지각이야, 아침부터 진짜 킹받네.", example_translation: "(あーまた遅刻だ、朝からマジで腹立つわ。)", tags: ["#YouTube", "#怒り"],
-        likes: 2901, comments: 195, usage: 88, nuance: 40, demographic: "YouTubeや配信に慣れた10〜20代"
+        likes: 2901, comments: 195, usage: 88, nuance: 60, demographic: "YouTubeや配信に慣れた10〜20代"
     },
     {
         id: 16, word: "심쿵", reading: "シムクン", meaning: "胸キュン / 心臓がドクンとする",
         question: "K-POPアイドルによく使うシチュエーションは？", example_native: "너 방금 웃을 때 나 심쿵했잖아.", example_translation: "(さっき君が笑った時、私胸キュンしたじゃん。)", tags: ["#胸キュン", "#恋愛"],
-        likes: 1980, comments: 60, usage: 70, nuance: 80, demographic: "10〜30代の女性層が主力"
+        likes: 1980, comments: 60, usage: 70, nuance: 20, demographic: "10〜30代の女性層が主力"
     },
     {
         id: 17, word: "읽씹", reading: "イルシプ", meaning: "既読スルー (읽고 씹기)",
         question: "カカオトークで「읽씹」された時の対処法を知りたいです。", example_native: "너 왜 어제 내 톡 읽씹했어?", example_translation: "(なんで昨日私のカトク既読スルーしたの？)", tags: ["#メッセンジャー", "#人間関係"],
-        likes: 2311, comments: 240, usage: 90, nuance: 65, demographic: "全年齢層のKakaoTalkユーザー"
+        likes: 2311, comments: 240, usage: 90, nuance: 35, demographic: "全年齢層のKakaoTalkユーザー"
     },
     {
         id: 18, word: "불금", reading: "プルグム", meaning: "花の金曜日 / 華金",
         question: "韓国の「불금」はどんな風に過ごしますか？", example_native: "불금이니까 오늘 곱창에 소주 한잔 어때?", example_translation: "(華金だから今日コプチャンに焼酎一杯どう？)", tags: ["#文化", "#飲み会"],
-        likes: 1750, comments: 88, usage: 80, nuance: 80, demographic: "20〜40代の社会人および大学生"
+        likes: 1750, comments: 88, usage: 80, nuance: 20, demographic: "20〜40代の社会人および大学生"
     },
     {
         id: 19, word: "소확행", reading: "ソファケン", meaning: "小さくて確かな幸せ",
         question: "韓国人が思う「소확행」の例を教えてください。", example_native: "퇴근 후 마시는 맥주 한 캔이 나의 소확행이야.", example_translation: "(退勤後に飲むビール一本が私の小さな幸せだよ。)", tags: ["#癒やし", "#トレンド"],
-        likes: 1205, comments: 42, usage: 60, nuance: 90, demographic: "20〜30代の若者層のトレンド指標"
+        likes: 1205, comments: 42, usage: 60, nuance: 10, demographic: "20〜30代の若者層のトレンド指標"
     },
     {
         id: 20, word: "TMI", reading: "ティーエムアイ", meaning: "情報過多 / どうでもいい情報",
         question: "「TMI」は目上の人にも使えますか？", example_native: "그건 너무 TMI니까 그만 얘기해.", example_translation: "(それはTMI(どうでもいい情報)すぎるからもう話すのやめて。)", tags: ["#外来語", "#雰囲気"],
-        likes: 2590, comments: 133, usage: 85, nuance: 60, demographic: "英語圏から入り10〜30代の若者層に定着"
+        likes: 2590, comments: 133, usage: 85, nuance: 40, demographic: "英語圏から入り10〜30代の若者層に定着"
     }
 ];
 
@@ -252,8 +252,8 @@ function createReelItem(data, mode) {
                             <div class="bar-fill-nuance" data-target="${data.nuance}" style="position:absolute; top:0; left:0; height:100%; width:0%; background:#3498db; border-radius:6px; transition:width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
                         </div>
                         <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; font-weight:600;">
-                            <span>フォーマル (丁寧)</span>
                             <span>カジュアル (親近感)</span>
+                            <span>フォーマル (丁寧)</span>
                         </div>
                     </div>
                 </div>
@@ -263,7 +263,7 @@ function createReelItem(data, mode) {
     return item;
 }
 
-function createEvalItem(data, lang) {
+function createEvalItem(data, lang, uniqueIndex) {
     const item = document.createElement('div');
     item.className = 'reel-item eval-reel-item';
     item.dataset.id = data.id;
@@ -273,8 +273,8 @@ function createEvalItem(data, lang) {
     const usageLowText = lang === 'kr' ? "거의 안 씀" : "あまり使わない";
     const usageHighText = lang === 'kr' ? "매일 씀" : "毎日使う";
     const nuanceText = lang === 'kr' ? "👔 격식 정도" : "👔 フォーマル度";
-    const nuanceLowText = lang === 'kr' ? "격식 (정중함)" : "フォーマル (丁寧)";
-    const nuanceHighText = lang === 'kr' ? "캐주얼 (친근함)" : "カジュアル (親近感)";
+    const nuanceLowText = lang === 'kr' ? "캐주얼 (친근함)" : "カジュアル (親近感)";
+    const nuanceHighText = lang === 'kr' ? "격식 (정중함)" : "フォーマル (丁寧)";
     const btnText = lang === 'kr' ? "<i class='fa-solid fa-check'></i> 평가 완료하고 다음으로" : "<i class='fa-solid fa-check'></i> 評価を完了して次へ";
     const lockText = lang === 'kr' ? "<i class='fa-solid fa-lock'></i> 평가를 완료해야 다음 단어로 넘어갈 수 있습니다." : "<i class='fa-solid fa-lock'></i> 評価を完了しないと次の単語に進めません。";
     
@@ -290,9 +290,9 @@ function createEvalItem(data, lang) {
                 <div style="margin-bottom:25px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700; font-size:14px;">
                         <span>${usageText}</span>
-                        <span id="eval-reel-usage-val-${data.id}" style="color:#ff8c00;">50%</span>
+                        <span id="eval-reel-usage-val-${uniqueIndex}" style="color:#ff8c00;">50%</span>
                     </div>
-                    <input type="range" id="eval-reel-usage-${data.id}" min="0" max="100" value="50" style="width:100%; accent-color:#ff8c00; pointer-events:auto;" oninput="document.getElementById('eval-reel-usage-val-${data.id}').innerText = this.value + '%'">
+                    <input type="range" id="eval-reel-usage-${uniqueIndex}" min="0" max="100" value="50" style="width:100%; accent-color:#ff8c00; pointer-events:auto;" oninput="document.getElementById('eval-reel-usage-val-${uniqueIndex}').innerText = this.value + '%'">
                     <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:5px; font-weight:600;">
                         <span>${usageLowText}</span><span>${usageHighText}</span>
                     </div>
@@ -301,9 +301,9 @@ function createEvalItem(data, lang) {
                 <div style="margin-bottom:30px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700; font-size:14px;">
                         <span>${nuanceText}</span>
-                        <span id="eval-reel-nuance-val-${data.id}" style="color:#3498db;">50%</span>
+                        <span id="eval-reel-nuance-val-${uniqueIndex}" style="color:#3498db;">50%</span>
                     </div>
-                    <input type="range" id="eval-reel-nuance-${data.id}" min="0" max="100" value="50" style="width:100%; accent-color:#3498db; pointer-events:auto;" oninput="document.getElementById('eval-reel-nuance-val-${data.id}').innerText = this.value + '%'">
+                    <input type="range" id="eval-reel-nuance-${uniqueIndex}" min="0" max="100" value="50" style="width:100%; accent-color:#3498db; pointer-events:auto;" oninput="document.getElementById('eval-reel-nuance-val-${uniqueIndex}').innerText = this.value + '%'">
                     <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:5px; font-weight:600;">
                         <span>${nuanceLowText}</span><span>${nuanceHighText}</span>
                     </div>
@@ -337,27 +337,28 @@ window.submitReelEval = function(id, btn) {
 function renderFeed() {
     feedContainer.innerHTML = '';
     const combinedFeed = [];
-    let jpIndex = 0;
-    let krIndex = 0;
     
     // For jp_version/app.js (Japanese users learning KR)
-    while(krIndex < DataKR.length || jpIndex < DataJP.length) {
-        for(let i = 0; i < 7; i++) {
-            if(krIndex < DataKR.length) {
-                combinedFeed.push({ type: 'learning', data: DataKR[krIndex++] });
-            }
+    // Create an infinite-like feed for demo: 3 learning items (KR) -> 1 eval item (JP)
+    // Run this for 12 cycles (total 48 items), wrapping around the word arrays safely.
+    let krIndex = 0;
+    let jpIndex = 0;
+    
+    for (let cycle = 0; cycle < 12; cycle++) {
+        for(let i = 0; i < 3; i++) {
+            combinedFeed.push({ type: 'learning', data: DataKR[krIndex % DataKR.length] });
+            krIndex++;
         }
-        if(jpIndex < DataJP.length) {
-            combinedFeed.push({ type: 'eval', data: DataJP[jpIndex++] });
-        }
+        combinedFeed.push({ type: 'eval', data: DataJP[jpIndex % DataJP.length] });
+        jpIndex++;
     }
 
-    combinedFeed.forEach(item => {
+    combinedFeed.forEach((item, index) => {
         let el;
         if (item.type === 'learning') {
-            el = createReelItem(item.data, 'kr'); // Show KR words in learning format
+            el = createReelItem(item.data, 'kr'); 
         } else {
-            el = createEvalItem(item.data, 'jp'); // Show JP words for evaluation in JP text
+            el = createEvalItem(item.data, 'jp', index); 
         }
         feedContainer.appendChild(el);
         observer.observe(el);
@@ -921,8 +922,8 @@ window.openDetail = function (id, customQuestionStr = null) {
                     <div class="bar-fill-nuance" data-target="${data.nuance}" style="position:absolute; top:0; left:0; height:100%; width:0%; background:#3498db; border-radius:6px; transition:width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; font-weight:600;">
-                    <span>フォーマル (丁寧)</span>
                     <span>カジュアル (親近感)</span>
+                    <span>フォーマル (丁寧)</span>
                 </div>
             </div>
         </div>
