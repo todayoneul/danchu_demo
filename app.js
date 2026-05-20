@@ -368,10 +368,6 @@ const observer = new IntersectionObserver((entries) => {
 
         if (entry.isIntersecting) {
             if (item.classList.contains('eval-reel-item')) {
-                if (item.dataset.evaluated !== 'true') {
-                    // Block scrolling
-                    document.getElementById('feed-container').style.overflowY = 'hidden';
-                }
                 return;
             }
 
@@ -1215,7 +1211,95 @@ window.addComment = function () {
     }
 }
 
+window.setupFeedScroll = function (container) {
+    if (!container) return;
+    let isScrolling = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isScrollGesture = false;
+    
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (isScrolling) return;
+        
+        const direction = e.deltaY > 0 ? 1 : -1;
+        scrollFeed(container, direction);
+    }, { passive: false });
+    
+    container.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isScrollGesture = false;
+    }, { passive: true });
+    
+    container.addEventListener('touchmove', (e) => {
+        const diffX = Math.abs(e.touches[0].clientX - touchStartX);
+        const diffY = Math.abs(e.touches[0].clientY - touchStartY);
+        
+        if (diffY > diffX && diffY > 10) {
+            isScrollGesture = true;
+            if (e.cancelable) e.preventDefault();
+        }
+    }, { passive: false });
+    
+    container.addEventListener('touchend', (e) => {
+        if (isScrolling || !isScrollGesture) return;
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffY = touchStartY - touchEndY;
+        const diffX = touchStartX - e.changedTouches[0].clientX;
+        
+        if (Math.abs(diffY) > 50 && Math.abs(diffY) > Math.abs(diffX)) {
+            const direction = diffY > 0 ? 1 : -1;
+            scrollFeed(container, direction);
+        }
+    }, { passive: true });
+
+    function scrollFeed(container, direction) {
+        const items = Array.from(container.querySelectorAll('.reel-item'));
+        if (items.length === 0) return;
+        
+        const containerRect = container.getBoundingClientRect();
+        let activeIndex = 0;
+        let minDiff = Infinity;
+        
+        items.forEach((item, idx) => {
+            const itemRect = item.getBoundingClientRect();
+            const diff = Math.abs(itemRect.top - containerRect.top);
+            if (diff < minDiff) {
+                minDiff = diff;
+                activeIndex = idx;
+            }
+        });
+        
+        const currentItem = items[activeIndex];
+        if (direction === 1) {
+            if (currentItem.classList.contains('eval-reel-item') && currentItem.dataset.evaluated !== 'true') {
+                showToast("평가를 완료해야 다음 단어로 넘어갈 수 있습니다.");
+                return;
+            }
+        }
+        
+        const targetIndex = activeIndex + direction;
+        if (targetIndex >= 0 && targetIndex < items.length) {
+            isScrolling = true;
+            const targetItem = items[targetIndex];
+            const targetScrollTop = container.scrollTop + targetItem.getBoundingClientRect().top - container.getBoundingClientRect().top;
+            
+            container.scrollTo({
+                top: targetScrollTop,
+                behavior: 'smooth'
+            });
+            
+            setTimeout(() => {
+                isScrolling = false;
+            }, 600);
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     renderFeed('jp');
     renderComTabs();
+    setupFeedScroll(document.getElementById('feed-container'));
+    setupFeedScroll(document.getElementById('srs-feed-container'));
 });
