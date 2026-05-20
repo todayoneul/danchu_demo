@@ -278,6 +278,9 @@ function createEvalItem(data, lang, uniqueIndex) {
     const btnText = lang === 'kr' ? "<i class='fa-solid fa-check'></i> 평가 완료하고 다음으로" : "<i class='fa-solid fa-check'></i> 評価を完了して次へ";
     const lockText = lang === 'kr' ? "<i class='fa-solid fa-lock'></i> 평가를 완료해야 다음 단어로 넘어갈 수 있습니다." : "<i class='fa-solid fa-lock'></i> 評価を完了しないと次の単語に進めません。";
 
+    const defaultUsageVal = lang === 'kr' ? "가끔 사용함" : "時々使う";
+    const defaultNuanceVal = lang === 'kr' ? "약간 비격식" : "少しカジュアル";
+
     item.innerHTML = `
         <div class="eval-center" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:400px; box-sizing:border-box; z-index:20; pointer-events:auto;">
             <div style="background:#fff; border-radius:16px; padding:25px; box-shadow:0 10px 30px rgba(0,0,0,0.05); color:#111;">
@@ -290,9 +293,9 @@ function createEvalItem(data, lang, uniqueIndex) {
                 <div style="margin-bottom:25px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700; font-size:14px;">
                         <span>${usageText}</span>
-                        <span id="eval-reel-usage-val-${uniqueIndex}" style="color:#ff8c00;">50%</span>
+                        <span id="eval-reel-usage-val-${uniqueIndex}" style="color:#ff8c00;">${defaultUsageVal}</span>
                     </div>
-                    <input type="range" id="eval-reel-usage-${uniqueIndex}" min="0" max="100" value="50" style="width:100%; accent-color:#ff8c00; pointer-events:auto;" oninput="document.getElementById('eval-reel-usage-val-${uniqueIndex}').innerText = this.value + '%'">
+                    <input type="range" id="eval-reel-usage-${uniqueIndex}" min="0" max="100" value="50" style="width:100%; accent-color:#ff8c00; pointer-events:auto;" oninput="document.getElementById('eval-reel-usage-val-${uniqueIndex}').innerText = getUsageText(this.value, '${lang}')">
                     <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:5px; font-weight:600;">
                         <span>${usageLowText}</span><span>${usageHighText}</span>
                     </div>
@@ -301,9 +304,9 @@ function createEvalItem(data, lang, uniqueIndex) {
                 <div style="margin-bottom:30px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700; font-size:14px;">
                         <span>${nuanceText}</span>
-                        <span id="eval-reel-nuance-val-${uniqueIndex}" style="color:#3498db;">50%</span>
+                        <span id="eval-reel-nuance-val-${uniqueIndex}" style="color:#3498db;">${defaultNuanceVal}</span>
                     </div>
-                    <input type="range" id="eval-reel-nuance-${uniqueIndex}" min="0" max="100" value="50" style="width:100%; accent-color:#3498db; pointer-events:auto;" oninput="document.getElementById('eval-reel-nuance-val-${uniqueIndex}').innerText = this.value + '%'">
+                    <input type="range" id="eval-reel-nuance-${uniqueIndex}" min="0" max="100" value="50" style="width:100%; accent-color:#3498db; pointer-events:auto;" oninput="document.getElementById('eval-reel-nuance-val-${uniqueIndex}').innerText = getNuanceText(this.value, '${lang}')">
                     <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:5px; font-weight:600;">
                         <span>${nuanceLowText}</span><span>${nuanceHighText}</span>
                     </div>
@@ -978,6 +981,16 @@ window.openEvaluateModal = function () {
     // 디테일 모달의 z-index보다 높히 띄웁니다.
     document.getElementById('evaluate-modal').classList.add('active');
     document.getElementById('evaluate-modal').style.zIndex = "60";
+    const usageSlider = document.getElementById('eval-usage');
+    const nuanceSlider = document.getElementById('eval-nuance');
+    if (usageSlider) {
+        usageSlider.value = 50;
+        updateEvalValue('usage', 50);
+    }
+    if (nuanceSlider) {
+        nuanceSlider.value = 50;
+        updateEvalValue('nuance', 50);
+    }
 }
 
 window.openDemographicsModal = function (id) {
@@ -1034,8 +1047,39 @@ window.closeEvaluateModal = function () {
     document.getElementById('evaluate-modal').classList.remove('active');
 }
 
+window.getUsageText = function (val, lang = 'kr') {
+    const v = parseInt(val);
+    if (lang === 'kr') {
+        if (v <= 20) return "거의 사용 안함";
+        if (v <= 50) return "가끔 사용함";
+        if (v <= 80) return "자주 사용함";
+        return "많이 사용함";
+    } else {
+        if (v <= 20) return "ほとんど使わない";
+        if (v <= 50) return "時々使う";
+        if (v <= 80) return "よく使う";
+        return "常に使う";
+    }
+};
+
+window.getNuanceText = function (val, lang = 'kr') {
+    const v = parseInt(val);
+    if (lang === 'kr') {
+        if (v <= 25) return "매우 비격식";
+        if (v <= 50) return "약간 비격식";
+        if (v <= 75) return "약간 격식";
+        return "매우 격식";
+    } else {
+        if (v <= 25) return "非常にカジュアル";
+        if (v <= 50) return "少しカジュアル";
+        if (v <= 75) return "少しフォーマル";
+        return "非常にフォーマル";
+    }
+};
+
 window.updateEvalValue = function (type, val) {
-    document.getElementById('eval-val-' + type).innerText = val + '%';
+    const text = type === 'usage' ? getUsageText(val, 'jp') : getNuanceText(val, 'jp');
+    document.getElementById('eval-val-' + type).innerText = text;
 }
 
 window.submitEvaluation = function () {
