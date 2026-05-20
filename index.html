@@ -79,22 +79,21 @@
         <!-- 3. 커뮤니티 모드 -->
         <main id="view-community" class="view-container">
             <header class="page-header community-header">
-                <h2>단추 커뮤니티</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin: 0;">단추 커뮤니티</h2>
+                    <div id="header-com-switch" class="com-switch" onclick="toggleComRole('toggle')" style="margin: 0; flex-shrink: 0;">
+                        <div class="switch-thumb">🇯🇵</div>
+                    </div>
+                </div>
                 <div class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" placeholder="단어 검색하기">
-                    <button class="req-btn" onclick="showToast('단어가 검색되었습니다!')">검색</button>
                 </div>
                 <div class="filter-tabs com-tabs" id="com-tabs-container">
                     <!-- JS Rendering -->
                 </div>
             </header>
             <div id="community-list" class="scroll-list"></div>
-
-            <!-- Floating Mode Switch -->
-            <div class="floating-com-toggle" onclick="toggleComRole('toggle')" style="position: absolute; bottom: 70px; right: 15px; z-index: 50; width: 60px; height: 60px; background: white; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; flex-direction:column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: 2px solid #eee;">
-                <span id="floating-thumb" style="font-size: 29px;">🇯🇵</span>
-            </div>
         </main>
 
         <!-- 4. 커뮤니티 - 단어 상세 모달 -->

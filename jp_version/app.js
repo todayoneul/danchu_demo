@@ -750,13 +750,16 @@ window.renderComTabs = function () {
 }
 
 window.toggleComRole = function (forceRole = 'toggle') {
+    const switchEl = document.getElementById('header-com-switch');
+    const thumb = switchEl ? switchEl.querySelector('.switch-thumb') : null;
+
     if (forceRole === 'learner' || (forceRole === 'toggle' && currentComRole === 'mentor')) {
         currentComRole = 'learner';
-        const thumb = document.getElementById('floating-thumb');
+        if (switchEl) switchEl.classList.remove('mentor-mode');
         if (thumb) thumb.innerText = '🇰🇷';
     } else {
         currentComRole = 'mentor';
-        const thumb = document.getElementById('floating-thumb');
+        if (switchEl) switchEl.classList.add('mentor-mode');
         if (thumb) thumb.innerText = '🇯🇵';
     }
     currentComTab = 'popular';

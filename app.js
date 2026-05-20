@@ -251,7 +251,7 @@ function createEvalItem(data, lang, uniqueIndex) {
     const item = document.createElement('div');
     item.className = 'reel-item eval-reel-item';
     item.dataset.id = data.id;
-    
+
     const titleText = lang === 'kr' ? "✨ 네이티브 지식 기여하기" : "✨ ネイティブ知識に貢献する";
     const usageText = lang === 'kr' ? "🔥 사용 빈도" : "🔥 使用頻度";
     const usageLowText = lang === 'kr' ? "거의 안 씀" : "あまり使わない";
@@ -261,7 +261,7 @@ function createEvalItem(data, lang, uniqueIndex) {
     const nuanceHighText = lang === 'kr' ? "격식 (정중함)" : "フォーマル (丁寧)";
     const btnText = lang === 'kr' ? "<i class='fa-solid fa-check'></i> 평가 완료하고 다음으로" : "<i class='fa-solid fa-check'></i> 評価を完了して次へ";
     const lockText = lang === 'kr' ? "<i class='fa-solid fa-lock'></i> 평가를 완료해야 다음 단어로 넘어갈 수 있습니다." : "<i class='fa-solid fa-lock'></i> 評価を完了しないと次の単語に進めません。";
-    
+
     item.innerHTML = `
         <div class="eval-center" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:400px; box-sizing:border-box; z-index:20; pointer-events:auto;">
             <div style="background:#fff; border-radius:16px; padding:25px; box-shadow:0 10px 30px rgba(0,0,0,0.05); color:#111;">
@@ -303,16 +303,16 @@ function createEvalItem(data, lang, uniqueIndex) {
     return item;
 }
 
-window.submitReelEval = function(id, btn) {
+window.submitReelEval = function (id, btn) {
     const item = btn.closest('.eval-reel-item');
     item.dataset.evaluated = 'true';
     btn.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
     btn.style.background = '#34c759';
     btn.style.boxShadow = '0 4px 10px rgba(52,199,89,0.3)';
-    
+
     const feedContainer = document.getElementById('feed-container');
     feedContainer.style.overflowY = 'scroll';
-    
+
     setTimeout(() => {
         feedContainer.scrollBy({ top: feedContainer.clientHeight, behavior: 'smooth' });
     }, 500);
@@ -321,15 +321,15 @@ window.submitReelEval = function(id, btn) {
 function renderFeed() {
     feedContainer.innerHTML = '';
     const combinedFeed = [];
-    
+
     // For app.js (Korean users learning JP)
     // Create an infinite-like feed for demo: 3 learning items (JP) -> 1 eval item (KR)
     // Run this for 12 cycles (total 48 items), wrapping around the word arrays safely.
     let jpIndex = 0;
     let krIndex = 0;
-    
+
     for (let cycle = 0; cycle < 12; cycle++) {
-        for(let i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             combinedFeed.push({ type: 'learning', data: DataJP[jpIndex % DataJP.length] });
             jpIndex++;
         }
@@ -340,9 +340,9 @@ function renderFeed() {
     combinedFeed.forEach((item, index) => {
         let el;
         if (item.type === 'learning') {
-            el = createReelItem(item.data, 'jp'); 
+            el = createReelItem(item.data, 'jp');
         } else {
-            el = createEvalItem(item.data, 'kr', index); 
+            el = createEvalItem(item.data, 'kr', index);
         }
         feedContainer.appendChild(el);
         observer.observe(el);
@@ -726,13 +726,16 @@ window.renderComTabs = function () {
 }
 
 window.toggleComRole = function (forceRole = 'toggle') {
+    const switchEl = document.getElementById('header-com-switch');
+    const thumb = switchEl ? switchEl.querySelector('.switch-thumb') : null;
+
     if (forceRole === 'learner' || (forceRole === 'toggle' && currentComRole === 'mentor')) {
         currentComRole = 'learner';
-        const thumb = document.getElementById('floating-thumb');
+        if (switchEl) switchEl.classList.remove('mentor-mode');
         if (thumb) thumb.innerText = '🇯🇵';
     } else {
         currentComRole = 'mentor';
-        const thumb = document.getElementById('floating-thumb');
+        if (switchEl) switchEl.classList.add('mentor-mode');
         if (thumb) thumb.innerText = '🇰🇷';
     }
     currentComTab = 'popular';
