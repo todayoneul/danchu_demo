@@ -129,17 +129,17 @@ allData.forEach(d => {
         const u = d.usage;
         d.demographics = {
             male: {
-                10: Math.max(10, Math.min(100, Math.floor(Math.random() * 40 + 40))), 
-                20: Math.max(10, Math.min(100, u - 3 + Math.floor(Math.random() * 6))), 
-                30: Math.max(10, Math.min(100, u - 15 + Math.floor(Math.random() * 20))), 
-                40: Math.max(10, Math.min(100, u - 25 + Math.floor(Math.random() * 20))), 
-                50: Math.max(10, Math.min(100, u - 35 + Math.floor(Math.random() * 20)))       
+                10: Math.max(10, Math.min(100, Math.floor(Math.random() * 40 + 40))),
+                20: Math.max(10, Math.min(100, u - 3 + Math.floor(Math.random() * 6))),
+                30: Math.max(10, Math.min(100, u - 15 + Math.floor(Math.random() * 20))),
+                40: Math.max(10, Math.min(100, u - 25 + Math.floor(Math.random() * 20))),
+                50: Math.max(10, Math.min(100, u - 35 + Math.floor(Math.random() * 20)))
             },
             female: {
-                10: Math.max(10, Math.min(100, Math.floor(Math.random() * 40 + 40))), 
-                20: Math.max(10, Math.min(100, u - 2 + Math.floor(Math.random() * 5))), 
-                30: Math.max(10, Math.min(100, u - 10 + Math.floor(Math.random() * 20))), 
-                40: Math.max(10, Math.min(100, u - 20 + Math.floor(Math.random() * 20))), 
+                10: Math.max(10, Math.min(100, Math.floor(Math.random() * 40 + 40))),
+                20: Math.max(10, Math.min(100, u - 2 + Math.floor(Math.random() * 5))),
+                30: Math.max(10, Math.min(100, u - 10 + Math.floor(Math.random() * 20))),
+                40: Math.max(10, Math.min(100, u - 20 + Math.floor(Math.random() * 20))),
                 50: Math.max(10, Math.min(100, u - 30 + Math.floor(Math.random() * 20)))
             }
         };
@@ -181,7 +181,7 @@ function createReelItem(data, mode) {
 
     if (mode === 'kr') {
         // Japanese learning Korean: Show Korean sentence first, Japanese translation later
-        primaryExample = data.example_native || ""; 
+        primaryExample = data.example_native || "";
         secondaryTranslation = data.example_translation || data.example_native;
     } else {
         // Japanese community feed: Show Japanese sentence first, Korean translation later
@@ -267,7 +267,7 @@ function createEvalItem(data, lang, uniqueIndex) {
     const item = document.createElement('div');
     item.className = 'reel-item eval-reel-item';
     item.dataset.id = data.id;
-    
+
     const titleText = lang === 'kr' ? "✨ 네이티브 지식 기여하기" : "✨ ネイティブ知識に貢献する";
     const usageText = lang === 'kr' ? "🔥 사용 빈도" : "🔥 使用頻度";
     const usageLowText = lang === 'kr' ? "거의 안 씀" : "あまり使わない";
@@ -277,7 +277,7 @@ function createEvalItem(data, lang, uniqueIndex) {
     const nuanceHighText = lang === 'kr' ? "격식 (정중함)" : "フォーマル (丁寧)";
     const btnText = lang === 'kr' ? "<i class='fa-solid fa-check'></i> 평가 완료하고 다음으로" : "<i class='fa-solid fa-check'></i> 評価を完了して次へ";
     const lockText = lang === 'kr' ? "<i class='fa-solid fa-lock'></i> 평가를 완료해야 다음 단어로 넘어갈 수 있습니다." : "<i class='fa-solid fa-lock'></i> 評価を完了しないと次の単語に進めません。";
-    
+
     item.innerHTML = `
         <div class="eval-center" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:400px; box-sizing:border-box; z-index:20; pointer-events:auto;">
             <div style="background:#fff; border-radius:16px; padding:25px; box-shadow:0 10px 30px rgba(0,0,0,0.05); color:#111;">
@@ -319,16 +319,16 @@ function createEvalItem(data, lang, uniqueIndex) {
     return item;
 }
 
-window.submitReelEval = function(id, btn) {
+window.submitReelEval = function (id, btn) {
     const item = btn.closest('.eval-reel-item');
     item.dataset.evaluated = 'true';
     btn.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
     btn.style.background = '#34c759';
     btn.style.boxShadow = '0 4px 10px rgba(52,199,89,0.3)';
-    
+
     const feedContainer = document.getElementById('feed-container');
     feedContainer.style.overflowY = 'scroll';
-    
+
     setTimeout(() => {
         feedContainer.scrollBy({ top: feedContainer.clientHeight, behavior: 'smooth' });
     }, 500);
@@ -337,15 +337,15 @@ window.submitReelEval = function(id, btn) {
 function renderFeed() {
     feedContainer.innerHTML = '';
     const combinedFeed = [];
-    
+
     // For jp_version/app.js (Japanese users learning KR)
     // Create an infinite-like feed for demo: 3 learning items (KR) -> 1 eval item (JP)
     // Run this for 12 cycles (total 48 items), wrapping around the word arrays safely.
     let krIndex = 0;
     let jpIndex = 0;
-    
+
     for (let cycle = 0; cycle < 12; cycle++) {
-        for(let i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             combinedFeed.push({ type: 'learning', data: DataKR[krIndex % DataKR.length] });
             krIndex++;
         }
@@ -356,9 +356,9 @@ function renderFeed() {
     combinedFeed.forEach((item, index) => {
         let el;
         if (item.type === 'learning') {
-            el = createReelItem(item.data, 'kr'); 
+            el = createReelItem(item.data, 'kr');
         } else {
-            el = createEvalItem(item.data, 'jp', index); 
+            el = createEvalItem(item.data, 'jp', index);
         }
         feedContainer.appendChild(el);
         observer.observe(el);
@@ -421,7 +421,7 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.6 });
 
-window.closeAllExpanded = function() {
+window.closeAllExpanded = function () {
     document.querySelectorAll('.expand-content.expanded').forEach(el => {
         el.classList.remove('expanded');
         const btn = el.parentElement.querySelector('.expand-btn');
@@ -999,7 +999,7 @@ window.openDemographicsModal = function (id) {
             <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
                 ${[10, 20, 30, 40, 50].map(age => `
                     <div style="display:flex; align-items:center;">
-                        <span style="width:40px; font-weight:800; font-size:15px; color:#444;">${age}代${age===50?'+':''}</span>
+                        <span style="width:40px; font-weight:800; font-size:15px; color:#444;">${age}代${age === 50 ? '+' : ''}</span>
                         <div style="flex:1; background:#eee; height:16px; border-radius:8px; margin:0 10px; overflow:hidden;">
                             <div style="width:${m[age]}%; height:100%; background:#3498db; border-radius:8px;"></div>
                         </div>
@@ -1011,7 +1011,7 @@ window.openDemographicsModal = function (id) {
             <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
                 ${[10, 20, 30, 40, 50].map(age => `
                     <div style="display:flex; align-items:center;">
-                        <span style="width:40px; font-weight:800; font-size:15px; color:#444;">${age}代${age===50?'+':''}</span>
+                        <span style="width:40px; font-weight:800; font-size:15px; color:#444;">${age}代${age === 50 ? '+' : ''}</span>
                         <div style="flex:1; background:#eee; height:16px; border-radius:8px; margin:0 10px; overflow:hidden;">
                             <div style="width:${f[age]}%; height:100%; background:#e74c3c; border-radius:8px;"></div>
                         </div>
