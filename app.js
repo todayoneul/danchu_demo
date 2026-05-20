@@ -254,15 +254,17 @@ function createEvalItem(data, lang, uniqueIndex) {
 
     const titleText = lang === 'kr' ? "✨ 네이티브 지식 기여하기" : "✨ ネイティブ知識に貢献する";
     const usageText = lang === 'kr' ? "🔥 사용 빈도" : "🔥 使用頻度";
-    const usageLowText = lang === 'kr' ? "거의 안 씀" : "あまり使わない";
+    const usageLowText = lang === 'kr' ? "몰라요" : "知らない";
     const usageHighText = lang === 'kr' ? "매일 씀" : "毎日使う";
     const nuanceText = lang === 'kr' ? "👔 격식 정도" : "👔 フォーマル度";
     const nuanceLowText = lang === 'kr' ? "캐주얼 (친근함)" : "カジュアル (親近感)";
     const nuanceHighText = lang === 'kr' ? "격식 (정중함)" : "フォーマル (丁寧)";
-    const btnText = lang === 'kr' ? "<i class='fa-solid fa-check'></i> 평가 완료하고 다음으로" : "<i class='fa-solid fa-check'></i> 評価を完了して次へ";
+    
+    // Default to "몰라요" / "知らない" initially, so button says "다른 단어 평가하기 🔄"
+    const btnText = lang === 'kr' ? "다른 단어 평가하기 🔄" : "別の単語を評価する 🔄";
     const lockText = lang === 'kr' ? "<i class='fa-solid fa-lock'></i> 평가를 완료해야 다음 단어로 넘어갈 수 있습니다." : "<i class='fa-solid fa-lock'></i> 評価を完了しないと次の単語に進めません。";
 
-    const defaultUsageVal = lang === 'kr' ? "가끔 사용함" : "時々使う";
+    const defaultUsageVal = lang === 'kr' ? "몰라요" : "知らない";
     const defaultNuanceVal = lang === 'kr' ? "약간 비격식" : "少しカジュアル";
 
     item.innerHTML = `
@@ -279,13 +281,13 @@ function createEvalItem(data, lang, uniqueIndex) {
                         <span>${usageText}</span>
                         <span id="eval-reel-usage-val-${uniqueIndex}" style="color:#ff8c00;">${defaultUsageVal}</span>
                     </div>
-                    <input type="range" id="eval-reel-usage-${uniqueIndex}" min="0" max="100" value="50" style="width:100%; accent-color:#ff8c00; pointer-events:auto;" oninput="document.getElementById('eval-reel-usage-val-${uniqueIndex}').innerText = getUsageText(this.value, '${lang}')">
+                    <input type="range" id="eval-reel-usage-${uniqueIndex}" min="0" max="100" value="0" style="width:100%; accent-color:#ff8c00; pointer-events:auto;" oninput="handleUsageSliderInput(this.value, ${uniqueIndex}, '${lang}')">
                     <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:5px; font-weight:600;">
                         <span>${usageLowText}</span><span>${usageHighText}</span>
                     </div>
                 </div>
                 
-                <div style="margin-bottom:30px;">
+                <div id="eval-reel-nuance-container-${uniqueIndex}" style="margin-bottom:30px; display:none;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700; font-size:14px;">
                         <span>${nuanceText}</span>
                         <span id="eval-reel-nuance-val-${uniqueIndex}" style="color:#3498db;">${defaultNuanceVal}</span>
@@ -296,7 +298,7 @@ function createEvalItem(data, lang, uniqueIndex) {
                     </div>
                 </div>
                 
-                <button class="btn-eval" onclick="submitReelEval(${data.id}, this)" style="width:100%; padding:15px; font-size:16px; background:#ff8c00; color:#fff; border:none; border-radius:12px; font-weight:800; box-shadow:0 4px 10px rgba(255,140,0,0.3); transition:all 0.2s; pointer-events:auto;">${btnText}</button>
+                <button class="btn-eval" onclick="submitReelEval(${data.id}, this, '${lang}', ${uniqueIndex})" style="width:100%; padding:15px; font-size:16px; background:#ff8c00; color:#fff; border:none; border-radius:12px; font-weight:800; box-shadow:0 4px 10px rgba(255,140,0,0.3); transition:all 0.2s; pointer-events:auto;">${btnText}</button>
             </div>
             <div class="eval-lock-msg" style="text-align:center; margin-top:15px; color:#aaa; font-size:13px; font-weight:600;">
                 ${lockText}
@@ -306,10 +308,18 @@ function createEvalItem(data, lang, uniqueIndex) {
     return item;
 }
 
-window.submitReelEval = function (id, btn) {
+window.submitReelEval = function (id, btn, lang = 'kr', uniqueIndex) {
     const item = btn.closest('.eval-reel-item');
+    const usageSlider = item.querySelector(`#eval-reel-usage-${uniqueIndex}`);
+    const usageVal = usageSlider ? parseInt(usageSlider.value) : 0;
+    
+    if (usageVal <= 20) {
+        replaceEvalCardWord(uniqueIndex, lang);
+        return;
+    }
+    
     item.dataset.evaluated = 'true';
-    btn.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
+    btn.innerHTML = lang === 'kr' ? '<i class="fa-solid fa-check-circle"></i> 평가 완료!' : '<i class="fa-solid fa-check-circle"></i> 評価完了!';
     btn.style.background = '#34c759';
     btn.style.boxShadow = '0 4px 10px rgba(52,199,89,0.3)';
 
@@ -1017,13 +1027,15 @@ window.closeEvaluateModal = function () {
 window.getUsageText = function (val, lang = 'kr') {
     const v = parseInt(val);
     if (lang === 'kr') {
-        if (v <= 20) return "거의 사용 안함";
-        if (v <= 50) return "가끔 사용함";
+        if (v <= 20) return "몰라요";
+        if (v <= 40) return "거의 사용 안함";
+        if (v <= 60) return "가끔 사용함";
         if (v <= 80) return "자주 사용함";
         return "많이 사용함";
     } else {
-        if (v <= 20) return "ほとんど使わない";
-        if (v <= 50) return "時々使う";
+        if (v <= 20) return "知らない";
+        if (v <= 40) return "ほとんど使わない";
+        if (v <= 60) return "時々使う";
         if (v <= 80) return "よく使う";
         return "常に使う";
     }
@@ -1046,13 +1058,104 @@ window.getNuanceText = function (val, lang = 'kr') {
 
 window.updateEvalValue = function (type, val) {
     const text = type === 'usage' ? getUsageText(val, 'kr') : getNuanceText(val, 'kr');
-    document.getElementById('eval-val-' + type).innerText = text;
+    const label = document.getElementById('eval-val-' + type);
+    if (label) label.innerText = text;
+    
+    if (type === 'usage') {
+        const nuanceContainer = document.getElementById('eval-nuance-container');
+        const btn = document.querySelector('#evaluate-modal .btn-eval');
+        if (parseInt(val) <= 20) {
+            if (nuanceContainer) nuanceContainer.style.display = 'none';
+            if (btn) btn.innerText = '모르는 단어 건너뛰기 🔄';
+        } else {
+            if (nuanceContainer) nuanceContainer.style.display = 'block';
+            if (btn) btn.innerText = '평가 제출하고 매듭 10개 획득 💰';
+        }
+    }
 }
 
 window.submitEvaluation = function () {
+    const usageVal = parseInt(document.getElementById('eval-usage').value);
+    if (usageVal <= 20) {
+        showToast('의견 감사합니다! 다른 단어를 추천해 드릴게요.');
+        closeEvaluateModal();
+        closeDetailModal();
+        setTimeout(() => {
+            const all = [...DataJP, ...DataKR];
+            const randomWord = all[Math.floor(Math.random() * all.length)];
+            openDetailModal(randomWord.id);
+        }, 300);
+        return;
+    }
     showToast('평가 감사합니다! 매듭 10개가 지급되었습니다 💰');
     closeEvaluateModal();
     closeDetailModal();
+}
+
+window.handleUsageSliderInput = function (value, uniqueIndex, lang) {
+    const v = parseInt(value);
+    const label = document.getElementById(`eval-reel-usage-val-${uniqueIndex}`);
+    if (label) label.innerText = getUsageText(v, lang);
+    
+    const nuanceContainer = document.getElementById(`eval-reel-nuance-container-${uniqueIndex}`);
+    const card = document.querySelector(`#eval-reel-usage-${uniqueIndex}`).closest('.eval-reel-item');
+    const btn = card ? card.querySelector('.btn-eval') : null;
+    
+    if (v <= 20) {
+        if (nuanceContainer) nuanceContainer.style.display = 'none';
+        if (btn) {
+            btn.innerHTML = lang === 'kr' ? "다른 단어 평가하기 🔄" : "別の単語を評価する 🔄";
+            btn.style.background = '#ff8c00';
+            btn.style.boxShadow = '0 4px 10px rgba(255,140,0,0.3)';
+        }
+    } else {
+        if (nuanceContainer) nuanceContainer.style.display = 'block';
+        if (btn) {
+            btn.innerHTML = lang === 'kr' ? "<i class='fa-solid fa-check'></i> 평가 완료하고 다음으로" : "<i class='fa-solid fa-check'></i> 評価を完了して次へ";
+            btn.style.background = '#ff8c00';
+            btn.style.boxShadow = '0 4px 10px rgba(255,140,0,0.3)';
+        }
+    }
+}
+
+window.replaceEvalCardWord = function (uniqueIndex, lang) {
+    const list = lang === 'jp' ? DataJP : DataKR;
+    const randomWord = list[Math.floor(Math.random() * list.length)];
+    
+    const card = document.querySelector(`.eval-reel-item input#eval-reel-usage-${uniqueIndex}`).closest('.eval-reel-item');
+    if (!card) return;
+    
+    card.dataset.id = randomWord.id;
+    const wordHeader = card.querySelector('h2');
+    if (wordHeader) wordHeader.innerText = randomWord.word;
+    
+    const wordMeaning = card.querySelector('p');
+    if (wordMeaning) wordMeaning.innerText = randomWord.meaning;
+    
+    const usageSlider = card.querySelector(`#eval-reel-usage-${uniqueIndex}`);
+    if (usageSlider) {
+        usageSlider.value = 0;
+    }
+    
+    const usageValText = card.querySelector(`#eval-reel-usage-val-${uniqueIndex}`);
+    if (usageValText) {
+        usageValText.innerText = getUsageText(0, lang);
+    }
+    
+    const nuanceContainer = card.querySelector(`#eval-reel-nuance-container-${uniqueIndex}`);
+    if (nuanceContainer) {
+        nuanceContainer.style.display = 'none';
+    }
+    
+    const btn = card.querySelector('.btn-eval');
+    if (btn) {
+        btn.innerHTML = lang === 'kr' ? "다른 단어 평가하기 🔄" : "別の単語を評価する 🔄";
+        btn.setAttribute('onclick', `submitReelEval(${randomWord.id}, this, '${lang}', ${uniqueIndex})`);
+        btn.style.background = '#ff8c00';
+        btn.style.boxShadow = '0 4px 10px rgba(255,140,0,0.3)';
+    }
+    
+    showToast(lang === 'kr' ? "새로운 단어가 추천되었습니다! 🎲" : "新しい単語が推薦されました！ 🎲");
 }
 
 window.toggleLike = function (btn, e) { e.stopPropagation(); btn.classList.toggle('liked'); const icon = btn.querySelector('.icon-wrapper'); icon.classList.remove('like-anim'); void icon.offsetWidth; icon.classList.add('like-anim'); const sp = btn.querySelector('span'); sp.innerText = btn.classList.contains('liked') ? parseInt(sp.innerText) + 1 : parseInt(sp.innerText) - 1; }
