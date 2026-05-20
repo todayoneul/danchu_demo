@@ -226,31 +226,35 @@ function createReelItem(data, mode) {
             </div>
             <div class="expand-content">
                 <div class="demo-info">👤 <b>統計特性</b><br>${data.demographic}</div>
-                <div class="gauges-wrapper" style="display:flex; justify-content:space-around; align-items:center; width:100%; margin-top:20px; padding-bottom:15px;">
-                    <div class="gauge-card" style="display:flex; flex-direction:column; align-items:center;">
-                        <div class="gauge-title" style="display:flex; justify-content:center; align-items:center; gap:6px; font-size:14px; font-weight:800; color:#111; margin-bottom:15px; letter-spacing:-0.5px;">
-                            🔥 使用頻度
-                            <i class="fa-solid fa-circle-info" onclick="openDemographicsModal(${data.id})" style="color:#aaa; cursor:pointer; font-size:14px; transition:color 0.2s;" onmouseover="this.style.color='#ff8c00'" onmouseout="this.style.color='#aaa'"></i>
-                        </div>
-                        <div class="gauge-body" style="position:relative; width:140px; height:70px; overflow:hidden;">
-                            <div class="gauge-ring" style="position:absolute; top:0; left:0; width:140px; height:140px; border-radius:50%; background:conic-gradient(from 270deg, #ff3b30 0%, #ffcc00 25%, #34c759 50%, transparent 50%); -webkit-mask-image:radial-gradient(transparent 55%, black 56%); mask-image:radial-gradient(transparent 55%, black 56%);"></div>
-                            <div class="gauge-needle" data-target="${data.usage}" style="position:absolute; bottom:0; left:50%; width:4px; height:68px; margin-left:-2px; background:#111; transform-origin:bottom center; transform:rotate(-90deg); transition:transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index:10; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-                                <div style="position:absolute; top:-6px; left:-4px; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:12px solid #111;"></div>
+                <div class="stat-bars-wrapper" style="display:flex; flex-direction:column; gap:20px; width:100%; margin-top:20px; padding-bottom:15px;">
+                    <div class="stat-bar-container" style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; align-items:center; gap:6px; font-size:14px; font-weight:800; color:#111; letter-spacing:-0.5px;">
+                                🔥 使用頻度
+                                <i class="fa-solid fa-circle-info" onclick="openDemographicsModal(${data.id})" style="color:#aaa; cursor:pointer; font-size:14px; transition:color 0.2s;" onmouseover="this.style.color='#ff8c00'" onmouseout="this.style.color='#aaa'"></i>
                             </div>
-                            <div class="gauge-pivot" style="position:absolute; bottom:-6px; left:50%; margin-left:-6px; width:12px; height:12px; background:#111; border-radius:50%; z-index:11; box-shadow:0 2px 4px rgba(0,0,0,0.2);"></div>
+                            <span style="font-size:16px; font-weight:900; color:#ff8c00;">${data.usage}%</span>
                         </div>
-                        <div class="gauge-value" style="margin-top:12px; font-size:24px; font-weight:900; color:#111;">${data.usage}%</div>
+                        <div style="position:relative; width:100%; height:12px; background:#f0f0f0; border-radius:6px; overflow:hidden;">
+                            <div class="bar-fill-usage" data-target="${data.usage}" style="position:absolute; top:0; left:0; height:100%; width:0%; background:#ff8c00; border-radius:6px; transition:width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; font-weight:600;">
+                            <span>あまり使わない</span>
+                            <span>毎日使う</span>
+                        </div>
                     </div>
-                    <div class="gauge-card" style="display:flex; flex-direction:column; align-items:center;">
-                        <div class="gauge-title" style="font-size:14px; font-weight:800; color:#111; margin-bottom:15px; letter-spacing:-0.5px;">👔 フォーマル度</div>
-                        <div class="gauge-body" style="position:relative; width:140px; height:70px; overflow:hidden;">
-                            <div class="gauge-ring" style="position:absolute; top:0; left:0; width:140px; height:140px; border-radius:50%; background:conic-gradient(from 270deg, #3498db 0%, #9b59b6 25%, #ff8c00 50%, transparent 50%); -webkit-mask-image:radial-gradient(transparent 55%, black 56%); mask-image:radial-gradient(transparent 55%, black 56%);"></div>
-                            <div class="gauge-needle" data-target="${data.nuance}" style="position:absolute; bottom:0; left:50%; width:4px; height:68px; margin-left:-2px; background:#111; transform-origin:bottom center; transform:rotate(-90deg); transition:transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index:10; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-                                <div style="position:absolute; top:-6px; left:-4px; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:12px solid #111;"></div>
-                            </div>
-                            <div class="gauge-pivot" style="position:absolute; bottom:-6px; left:50%; margin-left:-6px; width:12px; height:12px; background:#111; border-radius:50%; z-index:11; box-shadow:0 2px 4px rgba(0,0,0,0.2);"></div>
+                    <div class="stat-bar-container" style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:14px; font-weight:800; color:#111; letter-spacing:-0.5px;">👔 フォーマル度</span>
+                            <span style="font-size:16px; font-weight:900; color:#3498db;">${data.nuance}%</span>
                         </div>
-                        <div class="gauge-value" style="margin-top:12px; font-size:24px; font-weight:900; color:#111;">${data.nuance}%</div>
+                        <div style="position:relative; width:100%; height:12px; background:#f0f0f0; border-radius:6px; overflow:hidden;">
+                            <div class="bar-fill-nuance" data-target="${data.nuance}" style="position:absolute; top:0; left:0; height:100%; width:0%; background:#3498db; border-radius:6px; transition:width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; font-weight:600;">
+                            <span>フォーマル (丁寧)</span>
+                            <span>カジュアル (親近感)</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -326,8 +330,11 @@ window.closeAllExpanded = function() {
         const btn = el.parentElement.querySelector('.expand-btn');
         if (btn) btn.style.display = 'block';
 
-        el.querySelectorAll('.gauge-needle').forEach(needle => {
-            needle.style.transform = `rotate(-90deg)`;
+        el.querySelectorAll('.bar-fill-usage').forEach(bar => {
+            bar.style.width = `0%`;
+        });
+        el.querySelectorAll('.bar-fill-nuance').forEach(bar => {
+            bar.style.width = `0%`;
         });
     });
 };
@@ -366,8 +373,11 @@ window.toggleExpand = function (btn, event) {
         expandContent.classList.remove('expanded');
         btn.style.display = 'block';
 
-        expandContent.querySelectorAll('.gauge-needle').forEach(needle => {
-            needle.style.transform = `rotate(-90deg)`;
+        expandContent.querySelectorAll('.bar-fill-usage').forEach(bar => {
+            bar.style.width = `0%`;
+        });
+        expandContent.querySelectorAll('.bar-fill-nuance').forEach(bar => {
+            bar.style.width = `0%`;
         });
     } else {
         window.closeAllExpanded();
@@ -375,10 +385,16 @@ window.toggleExpand = function (btn, event) {
         btn.style.display = 'none';
 
         setTimeout(() => {
-            expandContent.querySelectorAll('.gauge-needle').forEach(needle => {
-                const target = needle.getAttribute('data-target');
+            expandContent.querySelectorAll('.bar-fill-usage').forEach(bar => {
+                const target = bar.getAttribute('data-target');
                 if (target !== null && target !== undefined) {
-                    needle.style.transform = `rotate(calc(${target} * 1.8deg - 90deg))`;
+                    bar.style.width = `${target}%`;
+                }
+            });
+            expandContent.querySelectorAll('.bar-fill-nuance').forEach(bar => {
+                const target = bar.getAttribute('data-target');
+                if (target !== null && target !== undefined) {
+                    bar.style.width = `${target}%`;
                 }
             });
         }, 50);
@@ -783,31 +799,35 @@ window.openDetail = function (id, customQuestionStr = null) {
             </div>
         `}
 
-        <div class="gauges-wrapper" style="display:flex; justify-content:space-around; align-items:center; width:100%; margin-top:20px; padding-bottom:15px; border-bottom: 1px dashed #ddd; margin-bottom:20px;">
-            <div class="gauge-card" style="display:flex; flex-direction:column; align-items:center;">
-                <div class="gauge-title" style="display:flex; justify-content:center; align-items:center; gap:6px; font-size:14px; font-weight:800; color:#111; margin-bottom:15px; letter-spacing:-0.5px;">
-                    🔥 使用頻度
-                    <i class="fa-solid fa-circle-info" onclick="openDemographicsModal(${data.id})" style="color:#aaa; cursor:pointer; font-size:14px; transition:color 0.2s;" onmouseover="this.style.color='#ff8c00'" onmouseout="this.style.color='#aaa'"></i>
-                </div>
-                <div class="gauge-body" style="position:relative; width:140px; height:70px; overflow:hidden;">
-                    <div class="gauge-ring" style="position:absolute; top:0; left:0; width:140px; height:140px; border-radius:50%; background:conic-gradient(from 270deg, #ff3b30 0%, #ffcc00 25%, #34c759 50%, transparent 50%); -webkit-mask-image:radial-gradient(transparent 55%, black 56%); mask-image:radial-gradient(transparent 55%, black 56%);"></div>
-                    <div class="gauge-needle needle-usage" style="position:absolute; bottom:0; left:50%; width:4px; height:68px; margin-left:-2px; background:#111; transform-origin:bottom center; transform:rotate(-90deg); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index:10; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-                        <div style="position:absolute; top:-6px; left:-4px; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:12px solid #111;"></div>
+        <div class="stat-bars-wrapper" style="display:flex; flex-direction:column; gap:20px; width:100%; margin-top:20px; padding-bottom:20px; border-bottom: 1px dashed #ddd; margin-bottom:20px;">
+            <div class="stat-bar-container" style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:6px; font-size:14px; font-weight:800; color:#111; letter-spacing:-0.5px;">
+                        🔥 使用頻度
+                        <i class="fa-solid fa-circle-info" onclick="openDemographicsModal(${data.id})" style="color:#aaa; cursor:pointer; font-size:14px; transition:color 0.2s;" onmouseover="this.style.color='#ff8c00'" onmouseout="this.style.color='#aaa'"></i>
                     </div>
-                    <div class="gauge-pivot" style="position:absolute; bottom:-6px; left:50%; margin-left:-6px; width:12px; height:12px; background:#111; border-radius:50%; z-index:11; box-shadow:0 2px 4px rgba(0,0,0,0.2);"></div>
+                    <span style="font-size:16px; font-weight:900; color:#ff8c00;">${data.usage}%</span>
                 </div>
-                <div class="gauge-value" style="margin-top:12px; font-size:24px; font-weight:900; color:#111;">${data.usage}%</div>
+                <div style="position:relative; width:100%; height:12px; background:#f0f0f0; border-radius:6px; overflow:hidden;">
+                    <div class="bar-fill-usage" data-target="${data.usage}" style="position:absolute; top:0; left:0; height:100%; width:0%; background:#ff8c00; border-radius:6px; transition:width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; font-weight:600;">
+                    <span>あまり使わない</span>
+                    <span>毎日使う</span>
+                </div>
             </div>
-            <div class="gauge-card" style="display:flex; flex-direction:column; align-items:center;">
-                <div class="gauge-title" style="font-size:14px; font-weight:800; color:#111; margin-bottom:15px; letter-spacing:-0.5px;">👔 フォーマル度</div>
-                <div class="gauge-body" style="position:relative; width:140px; height:70px; overflow:hidden;">
-                    <div class="gauge-ring" style="position:absolute; top:0; left:0; width:140px; height:140px; border-radius:50%; background:conic-gradient(from 270deg, #3498db 0%, #9b59b6 25%, #ff8c00 50%, transparent 50%); -webkit-mask-image:radial-gradient(transparent 55%, black 56%); mask-image:radial-gradient(transparent 55%, black 56%);"></div>
-                    <div class="gauge-needle needle-nuance" style="position:absolute; bottom:0; left:50%; width:4px; height:68px; margin-left:-2px; background:#111; transform-origin:bottom center; transform:rotate(-90deg); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index:10; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-                        <div style="position:absolute; top:-6px; left:-4px; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:12px solid #111;"></div>
-                    </div>
-                    <div class="gauge-pivot" style="position:absolute; bottom:-6px; left:50%; margin-left:-6px; width:12px; height:12px; background:#111; border-radius:50%; z-index:11; box-shadow:0 2px 4px rgba(0,0,0,0.2);"></div>
+            <div class="stat-bar-container" style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:14px; font-weight:800; color:#111; letter-spacing:-0.5px;">👔 フォーマル度</span>
+                    <span style="font-size:16px; font-weight:900; color:#3498db;">${data.nuance}%</span>
                 </div>
-                <div class="gauge-value" style="margin-top:12px; font-size:24px; font-weight:900; color:#111;">${data.nuance}%</div>
+                <div style="position:relative; width:100%; height:12px; background:#f0f0f0; border-radius:6px; overflow:hidden;">
+                    <div class="bar-fill-nuance" data-target="${data.nuance}" style="position:absolute; top:0; left:0; height:100%; width:0%; background:#3498db; border-radius:6px; transition:width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; font-weight:600;">
+                    <span>フォーマル (丁寧)</span>
+                    <span>カジュアル (親近感)</span>
+                </div>
             </div>
         </div>
         <h3 style="margin-top:20px; font-size:16px;">単語の質問とディスカッション (コメント ${commentsNum}個)</h3>
@@ -844,12 +864,10 @@ window.openDetail = function (id, customQuestionStr = null) {
     `;
     document.getElementById('detail-modal').classList.add('active');
     setTimeout(() => {
-        const nU = document.querySelector('#detail-modal .needle-usage');
-        const nN = document.querySelector('#detail-modal .needle-nuance');
-        if (nU) nU.style.transform = `rotate(calc(${data.usage} * 1.8deg - 90deg))`;
-        if (nN) nN.style.transform = `rotate(calc(${data.nuance} * 1.8deg - 90deg))`;
-
-        // 모달 내부 최상단 스크롤 초기화 보장
+        const bU = document.querySelector('#detail-modal .bar-fill-usage');
+        const bN = document.querySelector('#detail-modal .bar-fill-nuance');
+        if (bU) bU.style.width = `${data.usage}%`;
+        if (bN) bN.style.width = `${data.nuance}%`;
         document.querySelector('.modal-content').scrollTop = 0;
     }, 100);
 }
