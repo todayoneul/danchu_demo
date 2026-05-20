@@ -263,22 +263,105 @@ function createReelItem(data, mode) {
     return item;
 }
 
-function renderFeed(mode) {
-    feedContainer.innerHTML = '';
-    const list = mode === 'jp' ? DataJP : DataKR;
-    list.forEach(d => {
-        const el = createReelItem(d, mode);
-        feedContainer.appendChild(el);
-        observer.observe(el); // Observer 등록
-    });
+function createEvalItem(data, lang) {
+    const item = document.createElement('div');
+    item.className = 'reel-item eval-reel-item';
+    item.dataset.id = data.id;
+    
+    const titleText = lang === 'kr' ? "✨ 네이티브 지식 기여하기" : "✨ ネイティブ知識に貢献する";
+    const usageText = lang === 'kr' ? "🔥 사용 빈도" : "🔥 使用頻度";
+    const usageLowText = lang === 'kr' ? "거의 안 씀" : "あまり使わない";
+    const usageHighText = lang === 'kr' ? "매일 씀" : "毎日使う";
+    const nuanceText = lang === 'kr' ? "👔 격식 정도" : "👔 フォーマル度";
+    const nuanceLowText = lang === 'kr' ? "격식 (정중함)" : "フォーマル (丁寧)";
+    const nuanceHighText = lang === 'kr' ? "캐주얼 (친근함)" : "カジュアル (親近感)";
+    const btnText = lang === 'kr' ? "<i class='fa-solid fa-check'></i> 평가 완료하고 다음으로" : "<i class='fa-solid fa-check'></i> 評価を完了して次へ";
+    const lockText = lang === 'kr' ? "<i class='fa-solid fa-lock'></i> 평가를 완료해야 다음 단어로 넘어갈 수 있습니다." : "<i class='fa-solid fa-lock'></i> 評価を完了しないと次の単語に進めません。";
+    
+    item.innerHTML = `
+        <div class="eval-center" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:400px; box-sizing:border-box; z-index:20; pointer-events:auto;">
+            <div style="background:#fff; border-radius:16px; padding:25px; box-shadow:0 10px 30px rgba(0,0,0,0.05); color:#111;">
+                <div style="text-align:center; margin-bottom:20px;">
+                    <div style="font-size:14px; font-weight:800; color:#ff8c00; margin-bottom:10px;">${titleText}</div>
+                    <h2 style="font-size:32px; font-weight:900; margin:0;">${data.word}</h2>
+                    <p style="font-size:16px; color:#555; margin-top:8px;">${data.meaning}</p>
+                </div>
+                
+                <div style="margin-bottom:25px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700; font-size:14px;">
+                        <span>${usageText}</span>
+                        <span id="eval-reel-usage-val-${data.id}" style="color:#ff8c00;">50%</span>
+                    </div>
+                    <input type="range" id="eval-reel-usage-${data.id}" min="0" max="100" value="50" style="width:100%; accent-color:#ff8c00; pointer-events:auto;" oninput="document.getElementById('eval-reel-usage-val-${data.id}').innerText = this.value + '%'">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:5px; font-weight:600;">
+                        <span>${usageLowText}</span><span>${usageHighText}</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom:30px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700; font-size:14px;">
+                        <span>${nuanceText}</span>
+                        <span id="eval-reel-nuance-val-${data.id}" style="color:#3498db;">50%</span>
+                    </div>
+                    <input type="range" id="eval-reel-nuance-${data.id}" min="0" max="100" value="50" style="width:100%; accent-color:#3498db; pointer-events:auto;" oninput="document.getElementById('eval-reel-nuance-val-${data.id}').innerText = this.value + '%'">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:5px; font-weight:600;">
+                        <span>${nuanceLowText}</span><span>${nuanceHighText}</span>
+                    </div>
+                </div>
+                
+                <button class="btn-eval" onclick="submitReelEval(${data.id}, this)" style="width:100%; padding:15px; font-size:16px; background:#ff8c00; color:#fff; border:none; border-radius:12px; font-weight:800; box-shadow:0 4px 10px rgba(255,140,0,0.3); transition:all 0.2s; pointer-events:auto;">${btnText}</button>
+            </div>
+            <div class="eval-lock-msg" style="text-align:center; margin-top:15px; color:#aaa; font-size:13px; font-weight:600;">
+                ${lockText}
+            </div>
+        </div>
+    `;
+    return item;
 }
 
-window.switchMode = function (mode) {
-    currentMode = mode;
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    renderFeed(mode);
-    showToast(mode === 'kr' ? "韓国語学習モード" : "日本語コミュニティ");
+window.submitReelEval = function(id, btn) {
+    const item = btn.closest('.eval-reel-item');
+    item.dataset.evaluated = 'true';
+    btn.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
+    btn.style.background = '#34c759';
+    btn.style.boxShadow = '0 4px 10px rgba(52,199,89,0.3)';
+    
+    const feedContainer = document.getElementById('feed-container');
+    feedContainer.style.overflowY = 'scroll';
+    
+    setTimeout(() => {
+        feedContainer.scrollBy({ top: feedContainer.clientHeight, behavior: 'smooth' });
+    }, 500);
+}
+
+function renderFeed() {
+    feedContainer.innerHTML = '';
+    const combinedFeed = [];
+    let jpIndex = 0;
+    let krIndex = 0;
+    
+    // For jp_version/app.js (Japanese users learning KR)
+    while(krIndex < DataKR.length || jpIndex < DataJP.length) {
+        for(let i = 0; i < 7; i++) {
+            if(krIndex < DataKR.length) {
+                combinedFeed.push({ type: 'learning', data: DataKR[krIndex++] });
+            }
+        }
+        if(jpIndex < DataJP.length) {
+            combinedFeed.push({ type: 'eval', data: DataJP[jpIndex++] });
+        }
+    }
+
+    combinedFeed.forEach(item => {
+        let el;
+        if (item.type === 'learning') {
+            el = createReelItem(item.data, 'kr'); // Show KR words in learning format
+        } else {
+            el = createEvalItem(item.data, 'jp'); // Show JP words for evaluation in JP text
+        }
+        feedContainer.appendChild(el);
+        observer.observe(el);
+    });
 }
 
 // -----------------------------------------------------
@@ -287,35 +370,48 @@ window.switchMode = function (mode) {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         const item = entry.target;
-        const fill = item.querySelector('.timer-fill');
-        const reveal = item.querySelector('.reveal-section');
-
-        const timerBar = item.querySelector('.inline-timer-bar');
 
         if (entry.isIntersecting) {
-            // 타이머 초기화 (안보이게)
-            timerBar.style.opacity = '1';
-            timerBar.style.height = '10px';
-            timerBar.style.marginBottom = '12px';
+            if (item.classList.contains('eval-reel-item')) {
+                if (item.dataset.evaluated !== 'true') {
+                    // Block scrolling
+                    document.getElementById('feed-container').style.overflowY = 'hidden';
+                }
+                return;
+            }
 
-            fill.style.transition = 'none';
-            fill.style.width = '100%';
-            reveal.classList.remove('revealed');
+            const fill = item.querySelector('.timer-fill');
+            const reveal = item.querySelector('.reveal-section');
+            const timerBar = item.querySelector('.inline-timer-bar');
 
-            // 한 틱 지난 뒤 너비 0으로 줄이는 5초 애니메이션 시작
+            if (timerBar) {
+                timerBar.style.opacity = '1';
+                timerBar.style.height = '10px';
+                timerBar.style.marginBottom = '12px';
+            }
+
+            if (fill) {
+                fill.style.transition = 'none';
+                fill.style.width = '100%';
+            }
+            if (reveal) reveal.classList.remove('revealed');
+
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    fill.style.transition = 'width 5s linear';
-                    fill.style.width = '0%';
+                    if (fill) {
+                        fill.style.transition = 'width 5s linear';
+                        fill.style.width = '0%';
+                    }
                 });
             });
 
-            // 5초 뒤 reveal 및 타이머 숨김
             item.timerId = setTimeout(() => {
-                reveal.classList.add('revealed');
-                timerBar.style.opacity = '0';
-                timerBar.style.height = '0px';
-                timerBar.style.marginBottom = '0px';
+                if (reveal) reveal.classList.add('revealed');
+                if (timerBar) {
+                    timerBar.style.opacity = '0';
+                    timerBar.style.height = '0px';
+                    timerBar.style.marginBottom = '0px';
+                }
             }, 5000);
         } else {
             // 안 보이면 타이머 취소
