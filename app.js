@@ -1214,16 +1214,42 @@ window.addComment = function () {
 window.setupFeedScroll = function (container) {
     if (!container) return;
     let isScrolling = false;
+    let isWheelLocked = false;
+    let wheelTimeout = null;
     let touchStartX = 0;
     let touchStartY = 0;
     let isScrollGesture = false;
     
     container.addEventListener('wheel', (e) => {
         e.preventDefault();
-        if (isScrolling) return;
+        
+        if (isScrolling) {
+            isWheelLocked = true;
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                isWheelLocked = false;
+            }, 150);
+            return;
+        }
+        
+        if (isWheelLocked) {
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                isWheelLocked = false;
+            }, 150);
+            return;
+        }
+        
+        if (Math.abs(e.deltaY) < 10) return;
         
         const direction = e.deltaY > 0 ? 1 : -1;
+        isWheelLocked = true;
         scrollFeed(container, direction);
+        
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+            isWheelLocked = false;
+        }, 150);
     }, { passive: false });
     
     container.addEventListener('touchstart', (e) => {
